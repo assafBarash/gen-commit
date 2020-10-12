@@ -1,6 +1,6 @@
 {
-  "name": "gen-commit",
-  "version": "1.0.0",
+  "name": "commit-generator",
+  "version": "1.0.1",
   "description": "",
   "main": "index.js",
   "repository": "https://github.com/assafBarash/gen-commit",
