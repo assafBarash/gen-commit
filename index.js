@@ -1,5 +1,4 @@
-const config = require('./config.json');
-const exec = require('child_process').exec;
+const { exec } = require('child_process');
 const prompts = require('prompts');
 
 const executeCommand = (cmd) =>
@@ -55,7 +54,7 @@ const createChoice = ({ value, title = value, description }) => ({
       format: (ticketNumber) =>
         !ticketNumber || ticketNumber.includes('-')
           ? ticketNumber
-          : `${config.ticketPrefix}-${ticketNumber}`,
+          : `EE-${ticketNumber}`,
     },
     {
       type: 'text',
