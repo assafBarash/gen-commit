@@ -3,7 +3,13 @@
   "version": "1.0.1",
   "description": "",
   "main": "index.js",
-  "repository": "https://github.com/assafBarash/gen-commit",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/assafBarash/gen-commit"
+  },
+  "bin": {
+    "commit-generator": "./index.js"
+  },
   "scripts": {
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
