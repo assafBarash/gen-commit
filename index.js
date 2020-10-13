@@ -19,7 +19,7 @@ const createChoice = ({ value, title = value, description }) => ({
 (async () => {
   const { scope, description, type, ticketNumber, crs } = await prompts([
     {
-      type: 'select',
+      type: 'autocomplete',
       name: 'type',
       message: 'Select commit type',
       choices: [
@@ -68,9 +68,9 @@ const createChoice = ({ value, title = value, description }) => ({
     },
   ]);
 
-  const commitHead = `git commit -m ${type}${scope}: ${description}`;
-  const commitBody = ticketNumber || crs ? `-m ${ticketNumber} ${crs}` : '';
-  const commitCommand = `git commit -m "${commitHead}" -m "${commitBody}"`;
+  const commitHead = `git commit -m "${type}${scope}: ${description}"`;
+  const commitBody = ticketNumber || crs ? `-m "${ticketNumber} ${crs}"` : '';
+  const commitCommand = `${commitHead} ${commitBody}"`;
 
   console.log(commitCommand);
 
