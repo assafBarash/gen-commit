@@ -1,5 +1,7 @@
 #! /usr/bin/env node
 
+// test change
+
 const { exec } = require('child_process');
 const prompts = require('prompts');
 
