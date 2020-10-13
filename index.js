@@ -1,3 +1,5 @@
+#! /Users/assafba/.nvm/versions/node/v12.18.3
+
 const { exec } = require('child_process');
 const prompts = require('prompts');
 
