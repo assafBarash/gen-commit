@@ -1,7 +1,5 @@
 #! /usr/bin/env node
 
-// test change
-
 const { exec } = require('child_process');
 const prompts = require('prompts');
 
@@ -101,5 +99,7 @@ const createChoice = ({ value, title = value, description }) => ({
     executeCommand(commitCommand)
       .then(() => pull && executeCommand('git pull --rebase'))
       .then(() => push && executeCommand('git push'))
+      .then(() => console.log('SUCCESS'))
+      .then(process.exit)
       .catch(console.error);
 })();
