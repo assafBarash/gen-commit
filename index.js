@@ -53,10 +53,7 @@ const createChoice = ({ value, title = value, description }) => ({
       type: 'text',
       name: 'ticketNumber',
       message: 'Enter ticket number',
-      format: (ticketNumber) =>
-        !ticketNumber || ticketNumber.includes('-')
-          ? ticketNumber
-          : `EE-${ticketNumber}`,
+      format: (ticketNumber) => ticketNumber,
     },
     {
       type: 'text',
