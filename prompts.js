@@ -39,7 +39,7 @@ const commitMessageParams = [
     type: 'text',
     name: 'ticketNumber',
     message: 'Enter ticket number',
-    format: (ticketNumber) => (ticketNumber ? `Closes #${ticketNumber}` : ''),
+    format: (ticketNumber) => (ticketNumber ? `#${ticketNumber}` : ''),
   },
   {
     type: 'text',
