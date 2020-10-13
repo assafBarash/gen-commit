@@ -68,9 +68,9 @@ const createChoice = ({ value, title = value, description }) => ({
     },
   ]);
 
-  const commitHead = `git commit -m "${type}${scope}: ${description}"`;
+  const commitHead = `-m "${type}${scope}: ${description}"`;
   const commitBody = ticketNumber || crs ? `-m "${ticketNumber} ${crs}"` : '';
-  const commitCommand = `${commitHead} ${commitBody}"`;
+  const commitCommand = `git commit ${commitHead} ${commitBody}"`;
 
   console.log(commitCommand);
 
