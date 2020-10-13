@@ -67,10 +67,18 @@ const createChoice = ({ value, title = value, description }) => ({
     },
   ]);
 
-  const commitCommand = `git commit -am "${type}(${scope}): ${description}" -m "${ticketNumber} #cr${crs}"`;
+  const commitCommand = `git commit -m "${type}(${scope}): ${description}" -m "${ticketNumber} ${
+    crs ? `#cr${crs}` : ''
+  }"`;
   console.log(commitCommand);
 
-  const { commit, pull, push } = await prompts([
+  const { commit, pull, push, addDir } = await prompts([
+    {
+      type: 'confirm',
+      name: 'addDir',
+      message: 'add current dir?',
+      initial: true,
+    },
     {
       type: 'confirm',
       name: 'commit',
@@ -91,9 +99,10 @@ const createChoice = ({ value, title = value, description }) => ({
     },
   ]);
 
+  addDir && (await executeCommand('git add .'));
   commit &&
     executeCommand(commitCommand)
-      .then(() => pull && executeCommand('git pull --rebase'))
+      .then(() => pull && executeCommand('git pull --rebase --autostash'))
       .then(() => push && executeCommand('git push'))
       .then(() => console.log('SUCCESS'))
       .then(process.exit)
