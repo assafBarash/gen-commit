@@ -40,7 +40,7 @@ const createChoice = ({ value, title = value, description }) => ({
       type: 'text',
       name: 'scope',
       message: 'Enter scope',
-      validate: Boolean,
+      format: (scope) => (scope ? `(${scope})` : ''),
     },
     {
       type: 'text',
@@ -52,31 +52,33 @@ const createChoice = ({ value, title = value, description }) => ({
       type: 'text',
       name: 'ticketNumber',
       message: 'Enter ticket number',
-      format: (ticketNumber) => ticketNumber,
     },
     {
       type: 'text',
       name: 'crs',
       message: 'Enter CRs (separated by ,)',
-      validate: Boolean,
+      initial: '',
       format: (crs) =>
         crs
-          .split(',')
-          .map((cr) => `@${cr}`)
-          .join(''),
+          ? `#cr${crs
+              .split(',')
+              .map((cr) => `@${cr}`)
+              .join('')}`
+          : '',
     },
   ]);
 
-  const commitCommand = `git commit -m "${type}(${scope}): ${description}" -m "${ticketNumber} ${
-    crs ? `#cr${crs}` : ''
-  }"`;
+  const commitHead = `git commit -m ${type}${scope}: ${description}`;
+  const commitBody = ticketNumber || crs ? `-m ${ticketNumber} ${crs}` : '';
+  const commitCommand = `git commit -m "${commitHead}" -m "${commitBody}"`;
+
   console.log(commitCommand);
 
   const { commit, pull, push, addDir } = await prompts([
     {
       type: 'confirm',
       name: 'addDir',
-      message: 'add current dir?',
+      message: 'Add current directory?',
       initial: true,
     },
     {
