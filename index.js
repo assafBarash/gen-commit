@@ -6,7 +6,7 @@ const prompts = require('prompts');
 const executeCommand = (cmd) =>
   new Promise((resolve, reject) =>
     exec(cmd, (err, stdout, stderr) => {
-      if (err || stderr) reject({ err, stderr });
+      if (err) reject({ err, stderr });
       else resolve(stdout);
     })
   );
