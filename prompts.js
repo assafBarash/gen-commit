@@ -4,7 +4,7 @@ const createChoice = ({ value, title = value, description }) => ({
   description,
 });
 
-const commitMessageParams = [
+const commitMessageParamsPrompts = [
   {
     type: 'autocomplete',
     name: 'type',
@@ -49,12 +49,13 @@ const commitMessageParams = [
     type: 'text',
     name: 'scope',
     message: 'Enter scope',
-    format: (scope) => (scope ? `(${scope})` : ''),
+    initial: process.cwd().split('/').pop(),
+    format: (scope) => (scope ? `(${scope})` : '')
   },
   {
     type: 'text',
     name: 'description',
-    message: 'Enter description',
+    message: 'Enter commit message',
     validate: Boolean,
   },
   {
@@ -88,7 +89,7 @@ const executionFlow = [
   {
     type: 'confirm',
     name: 'commit',
-    message: 'Execute the above commit commit?',
+    message: 'Execute commit?',
     initial: true,
   },
   {
@@ -105,4 +106,4 @@ const executionFlow = [
   },
 ];
 
-module.exports = { executionFlow, commitMessageParams };
+module.exports = { executionFlow, commitMessageParamsPrompts };
