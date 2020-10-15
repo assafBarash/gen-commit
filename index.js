@@ -12,6 +12,8 @@ async function main() {
   executeCommit(commitCommand, await prompts(executionFlow));
 }
 
+// something changed
+
 function buildCommitMessage({ scope, description, type, ticketNumber, crs }) {
   const commitHead = `-m "${type}${scope}: ${description}"`;
   const commitBody = ticketNumber || crs ? `-m "${ticketNumber} ${crs}"` : '';
