@@ -22,7 +22,7 @@ async function executeCommit(commitCommand, { commit, pull, push, addDir }) {
   const executeCommand = (cmd) =>
     new Promise((resolve, reject) =>
       exec(cmd, (err, stdout, stderr) =>
-        err ? reject({ err, stderr }) : resolve(stdout)
+        err ? reject({ err, stderr, stdout }) : resolve(stdout)
       )
     );
 
