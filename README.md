@@ -4,7 +4,7 @@
 
 it generates commit commands\messages and copy them to your clipboard
 
-## How i use it?
+## How do i use it?
 
 run `npx commit-generator` and follow the walkthrough. <br/>
 you can add the following flags:
