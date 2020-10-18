@@ -44,6 +44,8 @@ function buildMetadataMessage(ticketNumber, crs) {
 }
 
 async function executeCommit(commitCommand) {
+  console.log(commitCommand);
+
   const executeCommand = (cmd) =>
     new Promise((resolve, reject) =>
       exec(cmd, (err, stdout, stderr) =>
