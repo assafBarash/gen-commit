@@ -8,8 +8,6 @@ const { commitMessageParamsPrompts } = require('./prompts');
 async function main() {
   const { execute, copyMessage, _ } = parseArgs();
 
-  console.log('_', _);
-
   const commitMessageParams = await prompts(commitMessageParamsPrompts);
   const customParams = _.map((param) => `-${param}`).join(' ');
   const { mainMessage, metadataMessage } = buildCommitMessages(
