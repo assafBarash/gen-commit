@@ -50,7 +50,7 @@ const commitMessageParamsPrompts = [
     name: 'scope',
     message: 'Enter scope',
     initial: process.cwd().split('/').pop(),
-    format: (scope) => (scope ? `(${scope})` : '')
+    format: (scope) => (scope ? `(${scope})` : ''),
   },
   {
     type: 'text',
@@ -79,31 +79,4 @@ const commitMessageParamsPrompts = [
   },
 ];
 
-const executionFlow = [
-  {
-    type: 'confirm',
-    name: 'addDir',
-    message: 'Add current directory?',
-    initial: true,
-  },
-  {
-    type: 'confirm',
-    name: 'commit',
-    message: 'Execute commit?',
-    initial: true,
-  },
-  {
-    type: (prev) => (prev ? 'confirm' : null),
-    name: 'pull',
-    message: 'Execute pull and rebase?',
-    initial: true,
-  },
-  {
-    type: (prev) => (prev ? 'confirm' : null),
-    name: 'push',
-    message: 'Execute push?',
-    initial: true,
-  },
-];
-
-module.exports = { executionFlow, commitMessageParamsPrompts };
+module.exports = { commitMessageParamsPrompts };
