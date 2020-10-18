@@ -6,13 +6,14 @@ const { exec, spawn } = require('child_process');
 const { commitMessageParamsPrompts } = require('./prompts');
 
 async function main() {
-  const { execute, copyMessage } = parseArgs();
+  const { execute, copyMessage, _ } = parseArgs();
 
   const commitMessageParams = await prompts(commitMessageParamsPrompts);
+  const customParams = _.map((param) => `-${param}`).join(' ');
   const { mainMessage, metadataMessage } = buildCommitMessages(
     commitMessageParams
   );
-  const commitCommand = `git commit -m "${mainMessage}" -m "${metadataMessage}"`;
+  const commitCommand = `git commit -m "${mainMessage}" -m "${metadataMessage}" ${customParams}`;
 
   if (execute) {
     return executeCommit(commitCommand);
