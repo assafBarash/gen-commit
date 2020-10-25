@@ -9,11 +9,13 @@ async function main() {
   const { execute, copyMessage, _ } = parseArgs();
 
   const commitMessageParams = await prompts(commitMessageParamsPrompts);
-  const customParams = _.map((param) => `-${param}`).join(' ');
+  const customParams = _.map((param) => `-${param}`)
+    .join(' ')
+    .trim();
   const { mainMessage, metadataMessage } = buildCommitMessages(
     commitMessageParams
   );
-  const commitCommand = `git commit -m "${mainMessage}" -m "${metadataMessage}" ${customParams} --allow-empty`;
+  const commitCommand = `git commit ${customParams} --allow-empty -m "${mainMessage}" -m "${metadataMessage}"`;
 
   if (execute) {
     return executeCommit(commitCommand);
