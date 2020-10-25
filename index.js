@@ -13,7 +13,7 @@ async function main() {
   const { mainMessage, metadataMessage } = buildCommitMessages(
     commitMessageParams
   );
-  const commitCommand = `git commit -m "${mainMessage}" -m "${metadataMessage}" ${customParams}`;
+  const commitCommand = `git commit -m "${mainMessage}" -m "${metadataMessage}" ${customParams} --allowempty`;
 
   if (execute) {
     return executeCommit(commitCommand);

@@ -6,7 +6,7 @@ it generates commit commands\messages and copy them to your clipboard
 
 ## How do i use it?
 
-run `npx commit-generator` and follow the walk through. <br/>
+run `npx commit-generator` and follow the walkthrough. <br/>
 you can add the following flags:
 
 - `--copyMessage` will strip the commit command and format only it message
