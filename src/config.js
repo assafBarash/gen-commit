@@ -4,6 +4,23 @@ const _prompts = require('prompts');
 
 const CONFIG_FILE = 'commit-generator.config';
 
+const lookup = (file, options = {}, dir = process.cwd()) => {
+  const {
+    def,
+    ext = 'js',
+    stopOn = (p) => p.split(path.sep).pop().toLowerCase().includes('user'),
+  } = options;
+  const p = path.join(dir, file);
+
+  if (fs.existsSync(`${p}.${ext}`)) return p;
+  if (stopOn(p)) return console.info('lookup did not found file') || def;
+
+  const newDir = dir.split(path.sep);
+  newDir.shift();
+
+  return lookup(p, options, newDir.join(path.sep));
+};
+
 const getGitDir = (depth = 0) => {
   const dir = path.join(
     process.cwd(),
@@ -13,7 +30,7 @@ const getGitDir = (depth = 0) => {
   return fs.existsSync(dir) ? dir.replace('.git', '') : getGitDir(depth++);
 };
 
-const configDir = path.join(getGitDir(), CONFIG_FILE);
+const configDir = lookup(CONFIG_FILE);
 const hasConfig = () => fs.existsSync(`${configDir}.js`);
 const readConfig = (overrideDir) => {
   try {
