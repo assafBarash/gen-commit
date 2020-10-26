@@ -7,13 +7,20 @@ const { commitMessageParamsPrompts } = require('./prompts');
 const { customConfig } = require('./config');
 
 async function main() {
-  const { execute, copyMessage, overrideConfig, _ } = parseArgs();
+  const { execute, copyMessage, overrideConfig, autoscope, _ } = parseArgs();
   const customParams = _.map((param) => `-${param}`)
     .join(' ')
     .trim();
 
-  const commitMessageParams = await prompts(commitMessageParamsPrompts);
-  const mainMessage = buildCommitMessages(commitMessageParams);
+  const commitMessageParams = await prompts(
+    commitMessageParamsPrompts.filter(
+      ({ name }) => name !== 'scope' || !autoscope
+    )
+  );
+  const mainMessage = buildCommitMessages({
+    ...commitMessageParams,
+    autoscope: autoscope ? `(${process.cwd().split('/').pop()})` : '',
+  });
   const additionalMessages = await customConfig(overrideConfig).then(
     (messages) =>
       messages
@@ -43,8 +50,8 @@ function parseArgs() {
   return mri(argv);
 }
 
-function buildCommitMessages({ scope, description, type, ticketNumber, crs }) {
-  return `${type}${scope}: ${description}`;
+function buildCommitMessages({ scope, description, type, autoscope }) {
+  return `${type}${scope || autoscope}: ${description}`;
 }
 
 function buildMetadataMessage(ticketNumber, crs) {
