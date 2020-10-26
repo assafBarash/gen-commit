@@ -1,4 +1,3 @@
-const mri = require('mri');
 const prompts = require('prompts');
 const { exec, spawn } = require('child_process');
 const { commitMessageParamsPrompts } = require('./prompts');

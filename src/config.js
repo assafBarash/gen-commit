@@ -5,7 +5,11 @@ const _prompts = require('prompts');
 const CONFIG_FILE = 'commit-generator.config';
 
 const getGitDir = (depth = 0) => {
-  const dir = path.join(Array.from(new Array(depth)).join('..'), '.git');
+  const dir = path.join(
+    process.cwd(),
+    Array.from(new Array(depth)).join('..'),
+    '.git'
+  );
   return fs.existsSync(dir) ? dir.replace('.git', '') : getGitDir(depth++);
 };
 
@@ -13,7 +17,7 @@ const configDir = path.join(getGitDir(), CONFIG_FILE);
 const hasConfig = () => fs.existsSync(`${configDir}.js`);
 const readConfig = (overrideDir) => {
   try {
-    return require(`./${overrideDir || configDir}`);
+    return require(`${overrideDir || configDir}`);
   } catch (e) {
     overrideDir &&
       console.error(
