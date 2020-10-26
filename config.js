@@ -15,6 +15,11 @@ const readConfig = (overrideDir) => {
   try {
     return require(`./${overrideDir || configDir}`);
   } catch (e) {
+    console.error(
+      `couldn't find overrideConfig at ${path.join(
+        overrideDir
+      )} from ${process.cwd()}`
+    );
     return [];
   }
 };
