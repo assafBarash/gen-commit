@@ -6,12 +6,12 @@ it generates commit commands\messages and copy them to your clipboard
 
 ## How Do I Use It?
 
-run `npx commit-generator` and follow the walkthrough. <br/>
+run `npx commit-generator` and follow the walkthrough <br/>
 
 ## Flags
 
-- `--copyMessage` will strip the commit command and format only it message\*
-- `--execute` will run\*
+- `--copyMessage`\* will strip the commit command and format only it message
+- `--execute`\* will run
   1. git add .
   2. git commit {generated_message}
   3. git pull --rebase
