@@ -1,17 +1,16 @@
-#! /usr/bin/env node
-
 const mri = require('mri');
 const prompts = require('prompts');
 const { exec, spawn } = require('child_process');
 const { commitMessageParamsPrompts } = require('./prompts');
 const { customConfig } = require('./config');
 
-async function main() {
-  const { execute, copyMessage, overrideConfig, autoscope, _ } = parseArgs();
-  const customParams = _.map((param) => `-${param}`)
-    .join(' ')
-    .trim();
-
+async function main({
+  execute,
+  copyMessage,
+  overrideConfig,
+  autoscope,
+  customParams,
+}) {
   const commitMessageParams = await prompts(
     commitMessageParamsPrompts.filter(
       ({ name }) => name !== 'scope' || !autoscope
@@ -46,18 +45,8 @@ async function main() {
   }
 }
 
-function parseArgs() {
-  const argv = process.argv.slice(2);
-  return mri(argv);
-}
-
 function buildCommitMessages({ scope, description, type, autoscope }) {
   return `${type}${scope || autoscope}: ${description}`;
-}
-
-function buildMetadataMessage(ticketNumber, crs) {
-  if (ticketNumber && crs) return `${ticketNumber} ${crs}`;
-  else return ticketNumber || crs || '';
 }
 
 async function executeCommit(commitCommand) {
