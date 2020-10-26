@@ -15,7 +15,10 @@ async function main() {
   const commitMessageParams = await prompts(commitMessageParamsPrompts);
   const mainMessage = buildCommitMessages(commitMessageParams);
   const additionalMessages = await customConfig().then((messages) =>
-    messages.map((message) => `-m "${message}"`).join(' ')
+    messages
+      .filter((message) => message.trim())
+      .map((message) => `-m "${message}"`)
+      .join(' ')
   );
 
   const commitCommand = `git commit ${customParams} --allow-empty -m "${mainMessage}" ${additionalMessages}`;
