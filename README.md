@@ -17,6 +17,7 @@ run `npx commit-generator` and follow the walkthrough. <br/>
   3. git pull --rebase
   4. git push
 - `--overrideConfig=./path/to/config` will override any config and will load the config in the path instead
+- `--autoscope` skip scope prompt and uses the current working dir as scope
 
 flags with \* will override each other (only one may be used)
 
