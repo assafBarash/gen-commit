@@ -7,9 +7,8 @@ it generates commit commands\messages and copy them to your clipboard
 ## How Do I Use It?
 
 run `npx commit-generator` and follow the walkthrough. <br/>
-you can add the following flags:
 
-## Additional Flags
+## Flags
 
 - `--copyMessage` will strip the commit command and format only it message\*
 - `--execute` will run\*
@@ -20,6 +19,8 @@ you can add the following flags:
 - `--overrideConfig=./path/to/config` will override any config and will load the config in the path instead
 
 flags with \* will override each other (only one may be used)
+
+## Additional GIT Flags
 
 you can also add any valid git flag to your generated commit like this: <br>
 `npx commit-generator n --execute` <br>
