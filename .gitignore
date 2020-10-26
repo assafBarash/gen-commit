@@ -117,3 +117,4 @@ dist
 
 .idea
 package-lock.json
+.commit-generator.config.js

@@ -4,25 +4,30 @@ const mri = require('mri');
 const prompts = require('prompts');
 const { exec, spawn } = require('child_process');
 const { commitMessageParamsPrompts } = require('./prompts');
+const { customConfig } = require('./config');
 
 async function main() {
   const { execute, copyMessage, _ } = parseArgs();
-
-  const commitMessageParams = await prompts(commitMessageParamsPrompts);
   const customParams = _.map((param) => `-${param}`)
     .join(' ')
     .trim();
-  const { mainMessage, metadataMessage } = buildCommitMessages(
-    commitMessageParams
+
+  const commitMessageParams = await prompts(commitMessageParamsPrompts);
+  const mainMessage = buildCommitMessages(commitMessageParams);
+  const additionalMessages = await customConfig().then((messages) =>
+    messages.map((message) => `-m "${message}"`).join(' ')
   );
-  const commitCommand = `git commit ${customParams} --allow-empty -m "${mainMessage}" -m "${metadataMessage}"`;
+
+  const commitCommand = `git commit ${customParams} --allow-empty -m "${mainMessage}" ${additionalMessages}`;
 
   if (execute) {
     return executeCommit(commitCommand);
   }
 
   if (copyMessage) {
-    const commitMessage = `${mainMessage}\n${metadataMessage}`;
+    const commitMessage = `${mainMessage}\n${additionalMessages
+      .split('-m')
+      .join('\n')}`;
     copyToClipboard(commitMessage);
   } else {
     copyToClipboard(commitCommand);
@@ -35,10 +40,7 @@ function parseArgs() {
 }
 
 function buildCommitMessages({ scope, description, type, ticketNumber, crs }) {
-  const mainMessage = `${type}${scope}: ${description}`;
-  const metadataMessage = buildMetadataMessage(ticketNumber, crs);
-
-  return { mainMessage, metadataMessage };
+  return `${type}${scope}: ${description}`;
 }
 
 function buildMetadataMessage(ticketNumber, crs) {

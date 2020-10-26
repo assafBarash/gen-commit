@@ -58,25 +58,6 @@ const commitMessageParamsPrompts = [
     message: 'Enter commit message',
     validate: Boolean,
   },
-  {
-    type: 'text',
-    name: 'ticketNumber',
-    message: 'Enter ticket number',
-    format: (ticketNumber) => (ticketNumber ? `#${ticketNumber}` : ''),
-  },
-  {
-    type: 'text',
-    name: 'crs',
-    message: 'Enter CRs (separated by ,)',
-    initial: '',
-    format: (crs) =>
-      crs
-        ? `#cr${crs
-            .split(',')
-            .map((cr) => `@${cr}`)
-            .join('')}`
-        : '',
-  },
 ];
 
 module.exports = { commitMessageParamsPrompts };
