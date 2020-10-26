@@ -12,7 +12,7 @@ module.exports = [
         type: 'multiselect',
         name: 'crs',
         message: 'Enter CRs (separated by ,)',
-        format: (crs) => (crs ? `#cr@${crs}` : ''),
+        format: (crs) => (crs.length ? `#cr@${crs}` : ''),
         choices: [
           ['Achia Rifman', 'achiar'],
           ['Alexander Gonchar', 'alexg'],
