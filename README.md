@@ -1,20 +1,25 @@
 # Commit-Generator
 
-## What it does?
+## What It Does?
 
 it generates commit commands\messages and copy them to your clipboard
 
-## How do i use it?
+## How Do I Use It?
 
 run `npx commit-generator` and follow the walkthrough. <br/>
 you can add the following flags:
 
-- `--copyMessage` will strip the commit command and format only it message
-- `--execute` will run
+## Additional Flags
+
+- `--copyMessage` will strip the commit command and format only it message\*
+- `--execute` will run\*
   1. git add .
   2. git commit {generated_message}
   3. git pull --rebase
   4. git push
+- `--overrideConfig=./path/to/config` will override any config and will load the config in the path instead
+
+flags with \* will override each other (only one may be used)
 
 you can also add any valid git flag to your generated commit like this: <br>
 `npx commit-generator n --execute` <br>

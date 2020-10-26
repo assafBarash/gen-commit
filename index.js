@@ -7,18 +7,19 @@ const { commitMessageParamsPrompts } = require('./prompts');
 const { customConfig } = require('./config');
 
 async function main() {
-  const { execute, copyMessage, _ } = parseArgs();
+  const { execute, copyMessage, overrideConfig, _ } = parseArgs();
   const customParams = _.map((param) => `-${param}`)
     .join(' ')
     .trim();
 
   const commitMessageParams = await prompts(commitMessageParamsPrompts);
   const mainMessage = buildCommitMessages(commitMessageParams);
-  const additionalMessages = await customConfig().then((messages) =>
-    messages
-      .filter((message) => message.trim())
-      .map((message) => `-m "${message}"`)
-      .join(' ')
+  const additionalMessages = await customConfig(overrideConfig).then(
+    (messages) =>
+      messages
+        .filter((message) => message.trim())
+        .map((message) => `-m "${message}"`)
+        .join(' ')
   );
 
   const commitCommand = `git commit ${customParams} --allow-empty -m "${mainMessage}" ${additionalMessages}`;

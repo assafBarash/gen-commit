@@ -11,16 +11,16 @@ const getGitDir = (depth = 0) => {
 
 const configDir = path.join(getGitDir(), CONFIG_FILE);
 const hasConfig = () => fs.existsSync(`${configDir}.js`);
-const readConfig = () => {
+const readConfig = (overrideDir) => {
   try {
-    return require(`./${configDir}`);
+    return require(`./${overrideDir || configDir}`);
   } catch (e) {
     return [];
   }
 };
 
-const customConfig = () =>
-  Promise.all(hasConfig() ? readConfig().map(buildMessage) : []);
+const customConfig = (overrideDir) =>
+  Promise.all(hasConfig() ? readConfig(overrideDir).map(buildMessage) : []);
 
 const buildMessage = async ({ format, prompts }) =>
   Object.entries(await _prompts(prompts)).reduce(
