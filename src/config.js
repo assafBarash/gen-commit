@@ -8,7 +8,7 @@ const lookup = (file, options = {}, dir = process.cwd()) => {
   const {
     def,
     ext = 'js',
-    stopOn = (p) => p.split(path.sep).pop().toLowerCase().includes('user'),
+    stopOn = (p) => p.split(path.sep).length > 50,
   } = options;
   const p = path.join(dir, file);
 
@@ -19,15 +19,6 @@ const lookup = (file, options = {}, dir = process.cwd()) => {
   newDir.shift();
 
   return lookup(p, options, newDir.join(path.sep));
-};
-
-const getGitDir = (depth = 0) => {
-  const dir = path.join(
-    process.cwd(),
-    Array.from(new Array(depth)).join('..'),
-    '.git'
-  );
-  return fs.existsSync(dir) ? dir.replace('.git', '') : getGitDir(depth++);
 };
 
 const configDir = lookup(CONFIG_FILE);
