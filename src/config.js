@@ -4,23 +4,28 @@ const _prompts = require('prompts');
 
 const CONFIG_FILE = 'commit-generator.config';
 
-const lookup = (file, options = {}, dir = process.cwd()) => {
-  const {
+const lookup = (file, options = {}) => {
+  let {
     def,
     ext = 'js',
-    stopOn = (p) => p.split(path.sep).length > 20,
+    stopOn = (depth) => depth > 20,
+    depth = 0,
+    dir = process.cwd(),
   } = options;
   const p = path.join(dir, file);
 
   if (fs.existsSync(`${p}.${ext}`)) return p;
-  if (stopOn(p)) return console.info('lookup did not found file') || def;
+  if (!dir || stopOn(depth))
+    return console.info('lookup did not found file') || def;
 
   const newDir = dir.split(path.sep);
   newDir.shift();
 
-  console.log('no conig. lookup to', newDir);
-
-  return lookup(p, options, newDir.join(path.sep));
+  return lookup(file, {
+    ...options,
+    dir: newDir.join(path.sep),
+    depth: depth++,
+  });
 };
 
 const configDir = lookup(CONFIG_FILE);
