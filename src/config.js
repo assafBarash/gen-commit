@@ -8,7 +8,7 @@ const lookup = (file, options = {}) => {
   let {
     def,
     ext = 'js',
-    stopOn = (depth) => depth > 20,
+    stopOn = (depth) => depth < 20,
     depth = 0,
     dir = process.cwd(),
   } = options;
