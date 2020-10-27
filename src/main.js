@@ -5,7 +5,7 @@ const { customConfig } = require('./config');
 
 async function main({
   execute,
-  copyMessage,
+  messageOnly,
   overrideConfig,
   autoscope,
   customParams,
@@ -34,7 +34,7 @@ async function main({
     return executeCommit(commitCommand);
   }
 
-  if (copyMessage) {
+  if (messageOnly) {
     const commitMessage = `${mainMessage}\n${additionalMessages
       .split('-m')
       .join('\n')}`;

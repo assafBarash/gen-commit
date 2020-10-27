@@ -10,7 +10,7 @@ run `npx commit-generator` and follow the walkthrough <br/>
 
 ## Flags
 
-- `--copyMessage`\* will strip the commit command and format only it message
+- `--messageOnly`\* will strip the commit command and format only it message
 - `--execute`\* will run
   1. git add .
   2. git commit {generated_message}
