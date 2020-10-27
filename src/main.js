@@ -9,6 +9,7 @@ async function main({
   overrideConfig,
   autoscope,
   customParams,
+  debug,
 }) {
   const commitMessageParams = await prompts(
     commitMessageParamsPrompts.filter(
@@ -20,7 +21,7 @@ async function main({
     ...commitMessageParams,
     autoscope: autoscope ? `(${process.cwd().split('/').pop()})` : '',
   });
-  const additionalMessages = await customConfig(overrideConfig).then(
+  const additionalMessages = await customConfig(overrideConfig, debug).then(
     (messages) =>
       messages
         .filter((message) => message.trim())

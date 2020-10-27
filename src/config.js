@@ -4,6 +4,9 @@ const _prompts = require('prompts');
 
 const CONFIG_FILE = 'commit-generator.config';
 
+let DEBUG = false;
+const shouldDebug = () => DEBUG;
+
 const lookup = (file, options = {}) => {
   const {
     def,
@@ -12,7 +15,10 @@ const lookup = (file, options = {}) => {
     depth = 0,
     dir = process.cwd(),
   } = options;
+
   const p = path.join(dir, file);
+
+  shouldDebug() && console.log('lookup at', p);
 
   if (fs.existsSync(`${p}.${ext}`)) return p;
   if (!dir || stopOn(depth))
@@ -21,7 +27,7 @@ const lookup = (file, options = {}) => {
   const newDir = dir.split(path.sep);
   newDir.shift();
 
-  console.log('newDir', newDir.join(path.sep));
+  shouldDebug() && console.log('newDir', newDir.join(path.sep));
 
   return lookup(file, {
     ...options,
@@ -30,11 +36,11 @@ const lookup = (file, options = {}) => {
   });
 };
 
-const configDir = lookup(CONFIG_FILE);
-const hasConfig = () => fs.existsSync(`${configDir}.js`);
+const getConfigDir = () => lookup(CONFIG_FILE);
+const hasConfig = () => fs.existsSync(`${getConfigDir()}.js`);
 const readConfig = (overrideDir) => {
   try {
-    return require(`${overrideDir || configDir}`);
+    return require(`${overrideDir || getConfigDir()}`);
   } catch (e) {
     overrideDir &&
       console.error(
@@ -46,8 +52,12 @@ const readConfig = (overrideDir) => {
   }
 };
 
-const customConfig = (overrideDir) =>
-  Promise.all(hasConfig() ? readConfig(overrideDir).map(buildMessage) : []);
+const customConfig = (overrideDir, debug) => {
+  DEBUG = debug;
+  return Promise.all(
+    hasConfig() ? readConfig(overrideDir).map(buildMessage) : []
+  );
+};
 
 const buildMessage = async ({ format, prompts }) =>
   Object.entries(await _prompts(prompts)).reduce(
