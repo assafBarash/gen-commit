@@ -5,10 +5,10 @@ const _prompts = require('prompts');
 const CONFIG_FILE = 'commit-generator.config';
 
 const lookup = (file, options = {}) => {
-  let {
+  const {
     def,
     ext = 'js',
-    stopOn = (depth) => depth < 20,
+    stopOn = (depth) => depth > 20,
     depth = 0,
     dir = process.cwd(),
   } = options;
@@ -21,10 +21,12 @@ const lookup = (file, options = {}) => {
   const newDir = dir.split(path.sep);
   newDir.shift();
 
+  console.log('newDir', newDir.join(path.sep));
+
   return lookup(file, {
     ...options,
     dir: newDir.join(path.sep),
-    depth: depth++,
+    depth: 1 + depth,
   });
 };
 
