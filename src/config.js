@@ -25,7 +25,7 @@ const lookup = (file, options = {}) => {
     return console.info('lookup did not found file') || def;
 
   const newDir = dir.split(path.sep);
-  newDir.shift();
+  newDir.pop();
 
   shouldDebug() && console.log('newDir', newDir.join(path.sep));
 
