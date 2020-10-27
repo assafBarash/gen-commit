@@ -8,7 +8,7 @@ const lookup = (file, options = {}, dir = process.cwd()) => {
   const {
     def,
     ext = 'js',
-    stopOn = (p) => p.split(path.sep).length > 50,
+    stopOn = (p) => p.split(path.sep).length > 20,
   } = options;
   const p = path.join(dir, file);
 
@@ -17,6 +17,8 @@ const lookup = (file, options = {}, dir = process.cwd()) => {
 
   const newDir = dir.split(path.sep);
   newDir.shift();
+
+  console.log('no conig. lookup to', newDir);
 
   return lookup(p, options, newDir.join(path.sep));
 };
