@@ -55,7 +55,7 @@ const readConfig = (overrideDir) => {
           overrideDir
         )} from ${process.cwd()}`
       );
-    return [];
+    return Promise.resolve([]);
   }
 };
 
