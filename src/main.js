@@ -25,15 +25,14 @@ async function main({
     ...commitMessageParams,
     autoscope: autoscope ? `(${process.cwd().split('/').pop()})` : '',
   });
-  const additionalMessages = await customConfig(overrideConfig, debug).then(
-    (messages) =>
-      messages
-        .filter((message) => message.trim())
-        .map((message) => `-m "${message}"`)
-        .join(' ')
-  );
+  const additionalMessages = await customConfig(
+    overrideConfig,
+    debug
+  ).then((messages) => messages.filter((message) => message.trim()));
 
-  const commitCommand = `git commit ${customParams} --allow-empty -m "${mainMessage}" ${additionalMessages}`;
+  const commitCommand = `git commit ${customParams} --allow-empty -m "${mainMessage}" ${additionalMessages
+    .map((message) => `-m "${message}"`)
+    .join(' ')}`;
 
   if (execute) {
     return executeCommit(commitCommand);
