@@ -1,4 +1,5 @@
 const fs = require('fs');
+const { type } = require('os');
 const path = require('path');
 const _prompts = require('prompts');
 
@@ -67,10 +68,18 @@ const customConfig = (overrideDir, debug) => {
     : Promise.resolve([]);
 };
 
-const buildMessage = async ({ format, prompts } = {}) =>
-  Object.entries(await _prompts(prompts)).reduce(
-    (message, [key, value]) => message.replace(`{{${key}}}`, value),
-    format
-  );
+const buildMessage = async ({ format, prompts } = {}) => {
+  const messageParams = await _prompts(prompts);
+
+  if (typeof format === 'string')
+    return Object.entries(messageParams).reduce(
+      (message, [key, value]) => message.replace(`{{${key}}}`, value),
+      format
+    );
+
+  if (typeof format === 'function') return format(messageParams);
+
+  throw Error('INVALID_FORMAT');
+};
 
 module.exports = { customConfig };
