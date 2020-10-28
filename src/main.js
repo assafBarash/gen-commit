@@ -4,10 +4,13 @@ const { commitMessageParamsPrompts } = require('./prompts');
 const { customConfig } = require('./config');
 
 async function main({
-  execute,
-  messageOnly,
+  e,
+  m,
+  a,
+  execute = e,
+  messageOnly = m,
   overrideConfig,
-  autoscope,
+  autoscope = a,
   customParams,
   debug,
 }) {
