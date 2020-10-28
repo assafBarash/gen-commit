@@ -69,7 +69,7 @@ const customConfig = (overrideDir, debug) => {
 };
 
 const buildMessage = async ({ format, prompts } = {}) => {
-  const messageParams = await _prompts(prompts);
+  const messageParams = await _prompts(prompts, { onCancel: process.exit });
 
   if (typeof format === 'string')
     return Object.entries(messageParams).reduce(

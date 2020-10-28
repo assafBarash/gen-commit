@@ -14,7 +14,8 @@ async function main({
   const commitMessageParams = await prompts(
     commitMessageParamsPrompts.filter(
       ({ name }) => name !== 'scope' || !autoscope
-    )
+    ),
+    { onCancel: process.exit }
   );
 
   const mainMessage = buildCommitMessages({
