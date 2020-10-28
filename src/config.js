@@ -22,7 +22,7 @@ const lookup = (file, options = {}) => {
 
   if (fs.existsSync(`${p}.${ext}`)) return p;
   if (!dir || stopOn(depth))
-    return console.info('lookup did not found file') || def;
+    return (shouldDebug() && console.info('lookup did not found file')) || def;
 
   const newDir = dir.split(path.sep);
   newDir.pop();
@@ -40,9 +40,15 @@ const getConfigDir = () => lookup(CONFIG_FILE);
 const hasConfig = () => fs.existsSync(`${getConfigDir()}.js`);
 const readConfig = (overrideDir) => {
   try {
-    return require(`${overrideDir || getConfigDir()}`);
+    const config = require(`${overrideDir || getConfigDir()}`);
+
+    if (typeof config === 'object') return Promise.resolve(config);
+    if (typeof config === 'function') return config();
+
+    throw Error('invalid config');
   } catch (e) {
     overrideDir &&
+      shouldDebug() &&
       console.error(
         `couldn't find overrideConfig at ${path.join(
           overrideDir
@@ -54,12 +60,14 @@ const readConfig = (overrideDir) => {
 
 const customConfig = (overrideDir, debug) => {
   DEBUG = debug;
-  return Promise.all(
-    hasConfig() ? readConfig(overrideDir).map(buildMessage) : []
-  );
+  return hasConfig()
+    ? readConfig(overrideDir).then((config) =>
+        Promise.all(config.map(buildMessage))
+      )
+    : Promise.resolve([]);
 };
 
-const buildMessage = async ({ format, prompts }) =>
+const buildMessage = async ({ format, prompts } = {}) =>
   Object.entries(await _prompts(prompts)).reduce(
     (message, [key, value]) => message.replace(`{{${key}}}`, value),
     format
