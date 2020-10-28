@@ -1,4 +1,4 @@
-# Commit-Generator
+# Do Git Commit
 
 ## What It Does?
 
@@ -6,7 +6,7 @@ it generates commit commands\messages and copy them to your clipboard
 
 ## How Do I Use It?
 
-run `npx commit-generator` and follow the walkthrough <br/>
+run `npx dgc` and follow the walkthrough <br/>
 
 ## Flags
 
@@ -24,7 +24,7 @@ flags with \* will override each other (only one may be used)
 ## Additional GIT Flags
 
 you can also add any valid git flag to your generated commit like this: <br>
-`npx commit-generator n --execute` <br>
+`npx dgc n --execute` <br>
 it will add `-n` flag to the generated commit message
 
 ## Add Custom Config

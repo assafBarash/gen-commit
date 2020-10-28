@@ -1,5 +1,5 @@
 {
-  "name": "commit-generator",
+  "name": "dgc",
   "version": "1.0.31",
   "description": "",
   "main": "index.js",
@@ -8,7 +8,7 @@
     "url": "https://github.com/assafBarash/gen-commit"
   },
   "bin": {
-    "commit-generator": "./index.js"
+    "dgc": "./index.js"
   },
   "scripts": {
     "start": "node index.js --debug",
