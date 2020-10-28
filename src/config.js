@@ -61,7 +61,7 @@ const readConfig = (overrideDir) => {
 
 const customConfig = (overrideDir, debug) => {
   DEBUG = debug;
-  return hasConfig()
+  return overrideDir || hasConfig()
     ? readConfig(overrideDir).then((config) =>
         Promise.all(config.map(buildMessage))
       )
