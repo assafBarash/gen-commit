@@ -8,37 +8,25 @@ const CONFIG_FILE = 'commit-generator.config';
 let DEBUG = false;
 const shouldDebug = () => DEBUG;
 
-const lookup = (file, options = {}) => {
-  const {
-    def,
-    ext = 'js',
-    stopOn = (depth) => depth > 20,
-    depth = 0,
-    dir = process.cwd(),
-  } = options;
-
+const lookup = (file, dir = process.cwd()) => {
   const p = path.join(dir, file);
 
   shouldDebug() && console.log('lookup at', p);
 
-  if (fs.existsSync(`${p}.${ext}`)) return p;
-  if (!dir || stopOn(depth))
-    return (shouldDebug() && console.info('lookup did not found file')) || def;
+  if (fs.existsSync(p)) return p;
+  if (!dir)
+    return (shouldDebug() && console.info('lookup did not found file')) || '';
 
   const newDir = dir.split(path.sep);
   newDir.pop();
 
   shouldDebug() && console.log('newDir', newDir.join(path.sep));
 
-  return lookup(file, {
-    ...options,
-    dir: newDir.join(path.sep),
-    depth: 1 + depth,
-  });
+  return lookup(file, newDir.join(path.sep));
 };
 
-const getConfigDir = () => lookup(CONFIG_FILE);
-const hasConfig = () => fs.existsSync(`${getConfigDir()}.js`);
+const getConfigDir = () => lookup(`${CONFIG_FILE}.js`);
+const hasConfig = () => fs.existsSync(getConfigDir());
 const readConfig = (overrideDir) => {
   try {
     const config = require(`${overrideDir || getConfigDir()}`);

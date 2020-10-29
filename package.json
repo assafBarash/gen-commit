@@ -14,6 +14,7 @@
     "start": "node index.js --debug",
     "deploy": "npx dgc -ea",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "postdeploy": "npm version patch",
     "postversion": "npm publish"
   },
   "author": "",
