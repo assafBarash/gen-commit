@@ -9,7 +9,9 @@ function parseArgs() {
 
   return {
     ...rest,
-    customParams: _.map((param) => `-${param}`)
+    customParams: _.map((param) =>
+      param.length === 1 ? `-${param}` : `--${param}`
+    )
       .join(' ')
       .trim(),
   };

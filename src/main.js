@@ -14,6 +14,22 @@ async function main({
   customParams,
   debug,
 }) {
+  const { mainMessage, additionalMessages, commitCommand } = await buildCommit({
+    autoscope,
+    overrideConfig,
+    debug,
+    customParams,
+  });
+  if (execute) return executeCommit(commitCommand);
+  else
+    copyToClipboard(
+      messageOnly
+        ? `${mainMessage}\n${additionalMessages.split('-m').join('\n')}`
+        : commitCommand
+    );
+}
+
+async function buildCommit({ autoscope, overrideConfig, debug, customParams }) {
   const commitMessageParams = await prompts(
     commitMessageParamsPrompts.filter(
       ({ name }) => name !== 'scope' || !autoscope
@@ -30,22 +46,11 @@ async function main({
     debug
   ).then((messages) => messages.filter((message) => message.trim()));
 
-  const commitCommand = `git commit ${customParams} --allow-empty -m "${mainMessage}" ${additionalMessages
+  const commitCommand = `git commit ${customParams} -m "${mainMessage}" ${additionalMessages
     .map((message) => `-m "${message}"`)
     .join(' ')}`;
 
-  if (execute) {
-    return executeCommit(commitCommand);
-  }
-
-  if (messageOnly) {
-    const commitMessage = `${mainMessage}\n${additionalMessages
-      .split('-m')
-      .join('\n')}`;
-    copyToClipboard(commitMessage);
-  } else {
-    copyToClipboard(commitCommand);
-  }
+  return { mainMessage, additionalMessages, commitCommand };
 }
 
 function buildCommitMessages({ scope, description, type, autoscope }) {
