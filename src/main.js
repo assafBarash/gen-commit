@@ -1,60 +1,33 @@
-const prompts = require('prompts');
 const { exec, spawn } = require('child_process');
-const { commitMessageParamsPrompts } = require('./prompts');
-const { customConfig } = require('./config');
+const {
+  getMessageSections,
+  buildMessageSection,
+} = require('./message-section-handlers');
+const { asyncMap } = require('./utils');
 
-async function main({
-  e,
-  m,
-  a,
-  execute = e,
-  messageOnly = m,
-  overrideConfig,
-  autoscope = a,
-  customParams,
-  debug,
-}) {
-  const { mainMessage, additionalMessages, commitCommand } = await buildCommit({
-    autoscope,
-    overrideConfig,
-    debug,
-    customParams,
-  });
+async function main(flags) {
+  const { execute, messageOnly, customParams } = flags;
+
+  const config = await getMessageSections(flags);
+
+  const commitCommand = `git commit -m ${customParams} ${(
+    await asyncMap(config, buildMessageSection)
+  )
+    .map((str) => `"${str}"`)
+    .join(' -m ')}`;
+
   if (execute) return executeCommit(commitCommand);
   else
     copyToClipboard(
       messageOnly
-        ? `${mainMessage}\n${additionalMessages.split('-m').join('\n')}`
+        ? `${commitCommand
+            .split('-m')
+            .filter((s, idx) => idx)
+            .join('\n')}`
+            .split('"')
+            .join('')
         : commitCommand
     );
-}
-
-async function buildCommit({ autoscope, overrideConfig, debug, customParams }) {
-  const commitMessageParams = await prompts(
-    commitMessageParamsPrompts.filter(
-      ({ name }) => name !== 'scope' || !autoscope
-    ),
-    { onCancel: process.exit }
-  );
-
-  const mainMessage = buildCommitMessages({
-    ...commitMessageParams,
-    autoscope: autoscope ? `(${process.cwd().split('/').pop()})` : '',
-  });
-  const additionalMessages = await customConfig(
-    overrideConfig,
-    debug
-  ).then((messages) => messages.filter((message) => message.trim()));
-
-  const commitCommand = `git commit ${customParams} -m "${mainMessage}" ${additionalMessages
-    .map((message) => `-m "${message}"`)
-    .join(' ')}`;
-
-  return { mainMessage, additionalMessages, commitCommand };
-}
-
-function buildCommitMessages({ scope, description, type, autoscope }) {
-  return `${type}${scope || autoscope}: ${description}`;
 }
 
 async function executeCommit(commitCommand) {
