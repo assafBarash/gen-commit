@@ -1,19 +1,12 @@
 const { exec, spawn } = require('child_process');
-const {
-  getMessageSections,
-  buildMessageSection,
-} = require('./message-section-handlers');
-const { asyncMap } = require('./utils');
+const { buildMessageSections } = require('./message-section-handlers');
 
 async function main(flags) {
   const { execute, messageOnly, customParams } = flags;
 
-  const commitCommand = `git commit -m ${customParams} ${(
-    await asyncMap(await getMessageSections(flags), buildMessageSection)
-  )
-    .filter(Boolean)
-    .map((str) => `"${str}"`)
-    .join(' -m ')}`
+  const commitCommand = `git commit ${customParams} -m ${await buildMessageSections(
+    flags
+  )}`
     .split(' ')
     .filter(Boolean)
     .join(' ');

@@ -1,6 +1,6 @@
 const _prompts = require('prompts');
 const defConfig = require('./def-config');
-const { lookup } = require('./utils');
+const { lookup, asyncMap } = require('./utils');
 
 const CONFIG_FILE = 'commit-generator.config';
 
@@ -48,4 +48,10 @@ const getMessageSections = async (flags) => {
   return console.log('failed to read config') || [];
 };
 
-module.exports = { getMessageSections, buildMessageSection };
+const buildMessageSections = async (flags) =>
+  (await asyncMap(await getMessageSections(flags), buildMessageSection))
+    .filter(Boolean)
+    .map((str) => `"${str}"`)
+    .join(' -m ');
+
+module.exports = { buildMessageSections };
