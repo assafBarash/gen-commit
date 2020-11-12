@@ -2,7 +2,6 @@ const fs = require('fs');
 const path = require('path');
 
 function lookup(file, dir = process.cwd()) {
-  console.log('inLookUp');
   const p = path.join(dir, file);
 
   if (fs.existsSync(p)) return p;
