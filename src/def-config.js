@@ -5,7 +5,10 @@ const createChoice = ({ value, title = value, description }) => ({
 });
 
 module.exports = ({ autoscope }) => ({
-  format: ({ type, scope, description }) => `${type}${scope}: ${description}`,
+  format: ({ type, scope, description }) =>
+    `${type}${
+      autoscope ? `(${process.cwd().split('/').pop()})` : scope
+    }: ${description}`,
   prompts: [
     {
       type: 'autocomplete',
