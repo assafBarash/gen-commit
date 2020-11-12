@@ -13,6 +13,7 @@ async function main(flags) {
   const commitCommand = `git commit -m ${customParams} ${(
     await asyncMap(config, buildMessageSection)
   )
+    .filter(Boolean)
     .map((str) => `"${str}"`)
     .join(' -m ')}`;
 
