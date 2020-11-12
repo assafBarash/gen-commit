@@ -8,14 +8,15 @@ const { asyncMap } = require('./utils');
 async function main(flags) {
   const { execute, messageOnly, customParams } = flags;
 
-  const config = await getMessageSections(flags);
-
   const commitCommand = `git commit -m ${customParams} ${(
-    await asyncMap(config, buildMessageSection)
+    await asyncMap(await getMessageSections(flags), buildMessageSection)
   )
     .filter(Boolean)
     .map((str) => `"${str}"`)
-    .join(' -m ')}`;
+    .join(' -m ')}`
+    .split(' ')
+    .filter(Boolean)
+    .join(' ');
 
   if (execute) return executeCommit(commitCommand);
   else
