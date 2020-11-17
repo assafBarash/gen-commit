@@ -32,8 +32,10 @@ it will add `-n` flag to the generated commit message
 
 ## Add Custom Config
 
-you can extend the commit generator by having a `commit-generator.config.js` file in the root of you repo.
+you can extend the commit generator by having a `commit-generator.config.js` anywhere above your CWD hierarchy.
 the config file should export an array of objects as following:
+
+- the config file can export async function as well, where the first argument is the default steps and the second is the given flags
 
 ```
 {
@@ -54,4 +56,6 @@ the config file should export an array of objects as following:
 
 _prompts_ - prompts flow to build a single git `-m` statement. see [prompts docs](https://github.com/terkelg/prompts#readme) for possible config & usage.
 
-_format_ - the fashion in which the input acquired by the prompts flow will be arranged. the name of each prompt can be used as value by wrapping with double brackets. example: {{prompt_name}} -> user input for that prompt step
+_format<string | function>_ - the fashion in which the input acquired by the prompts flow will be arranged. <br>
+**when value is string** the name of each prompt can be used as value by wrapping with double brackets. example: {{prompt_name}} -> user input for that prompt step. <br>
+**when value is function** the first argument will be an object with keys & values populated from prompts, the returned value should be a string of the formatted message section

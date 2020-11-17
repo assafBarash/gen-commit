@@ -44,7 +44,6 @@ async function executeCommit(commitCommand, { selectStaging }) {
         },
       ]).then(({ files }) => executeCommand(`git add ${files.join(' ')}`)));
 
-  return;
   return executeCommand(commitCommand)
     .then(() => console.log('commit SUCCESS'))
     .then(() => executeCommand('git pull --rebase --autostash'))
