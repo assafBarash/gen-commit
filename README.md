@@ -20,7 +20,7 @@ run `npx dgc` and follow the walkthrough <br/>
   3. git pull --rebase
   4. git push
 
-- `--selectStaging` on execute will enable to select files from git diff instead of running `git add .`
+- `--selectStaging | -s` on execute will enable to select files from git diff instead of running `git add .`
 
 flags with \* will override each other (only one may be used)
 
