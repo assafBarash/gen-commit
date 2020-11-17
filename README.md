@@ -10,14 +10,17 @@ run `npx dgc` and follow the walkthrough <br/>
 
 ## Flags
 
+- `--overrideConfig=./path/to/config` will override any config and will load the config in the path instead
+- `--autoscope | -a` skip scope prompt and uses the current working dir as scope
 - `--messageOnly | -m`\* will strip the commit command and format only it message
 - `--execute | -e`\* will run
+
   1. git add .
   2. git commit {generated_message}
   3. git pull --rebase
   4. git push
-- `--overrideConfig=./path/to/config` will override any config and will load the config in the path instead
-- `--autoscope | -a` skip scope prompt and uses the current working dir as scope
+
+- `--selectStaging` on execute will enable to select files from git diff instead of running `git add .`
 
 flags with \* will override each other (only one may be used)
 

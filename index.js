@@ -8,17 +8,20 @@ const parseFlags = ({
   e, // execute commit, pull --rebase, push
   m, // strip command to message only
   a, // auto determine scope
+  s, // select files to stage
   // flags
   execute = e,
   messageOnly = m,
   overrideConfig,
   autoscope = a,
   customParams,
+  selectStaging = s,
 }) => ({
   execute,
   messageOnly,
   overrideConfig,
   autoscope,
+  selectStaging,
   customParams,
 });
 

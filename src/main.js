@@ -1,3 +1,4 @@
+const prompts = require('prompts');
 const { buildMessageSections } = require('./message-section-handlers');
 const { copyToClipboard, executeCommand } = require('./utils');
 
@@ -11,7 +12,7 @@ async function main(flags) {
     .filter(Boolean)
     .join(' ');
 
-  if (execute) return executeCommit(commitCommand);
+  if (execute) return executeCommit(commitCommand, flags);
   else
     copyToClipboard(
       messageOnly
@@ -25,10 +26,25 @@ async function main(flags) {
     );
 }
 
-async function executeCommit(commitCommand) {
+async function executeCommit(commitCommand, { selectStaging }) {
   console.log(commitCommand);
 
-  await executeCommand('git add .');
+  await (!selectStaging
+    ? executeCommand('git add .')
+    : prompts([
+        {
+          type: 'autocompleteMultiselect',
+          name: 'files',
+          message: 'Enter files to add',
+          hint: '- Space to select. Return to submit',
+          choices: (await executeCommand('git diff --name-only'))
+            .split('\n')
+            .filter(Boolean)
+            .map((d) => ({ title: d, value: d })),
+        },
+      ]).then(({ files }) => executeCommand(`git add ${files.join(' ')}`)));
+
+  return;
   return executeCommand(commitCommand)
     .then(() => console.log('commit SUCCESS'))
     .then(() => executeCommand('git pull --rebase --autostash'))
