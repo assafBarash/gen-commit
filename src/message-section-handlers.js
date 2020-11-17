@@ -5,12 +5,13 @@ const { lookup, asyncMap } = require('./utils');
 const CONFIG_FILE = 'commit-generator.config';
 
 const getConfigDir = () => lookup(`${CONFIG_FILE}.js`);
-const readConfig = (overrideDir, ...args) => {
+const readConfig = (overrideDir, defConfig, flags) => {
   try {
     const config = require(`${overrideDir || getConfigDir()}`);
 
-    if (typeof config === 'object') return Promise.resolve(config);
-    if (typeof config === 'function') return config(...args);
+    if (typeof config === 'object')
+      return Promise.resolve([defConfig, ...config]);
+    if (typeof config === 'function') return config(defConfig, flags);
   } catch (e) {
     overrideDir &&
       console.error(
