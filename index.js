@@ -4,22 +4,23 @@ const main = require('./src/main');
 const mri = require('mri');
 
 const parseFlags = ({
-  e,
-  m,
-  a,
+  // aliases
+  e, // execute commit, pull --rebase, push
+  m, // strip command to message only
+  a, // auto determine scope
+  // flags
   execute = e,
   messageOnly = m,
   overrideConfig,
   autoscope = a,
   customParams,
-  debug,
 }) => ({
   execute,
   messageOnly,
   overrideConfig,
   autoscope,
+  filesAdd,
   customParams,
-  debug,
 });
 
 function parseArgs() {

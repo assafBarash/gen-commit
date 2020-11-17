@@ -1,5 +1,5 @@
-const { exec, spawn } = require('child_process');
 const { buildMessageSections } = require('./message-section-handlers');
+const { copyToClipboard, executeCommand } = require('./utils');
 
 async function main(flags) {
   const { execute, messageOnly, customParams } = flags;
@@ -28,13 +28,6 @@ async function main(flags) {
 async function executeCommit(commitCommand) {
   console.log(commitCommand);
 
-  const executeCommand = (cmd) =>
-    new Promise((resolve, reject) =>
-      exec(cmd, (err, stdout, stderr) =>
-        err ? reject({ err, stderr, stdout }) : resolve(stdout)
-      )
-    );
-
   await executeCommand('git add .');
   return executeCommand(commitCommand)
     .then(() => console.log('commit SUCCESS'))
@@ -45,14 +38,6 @@ async function executeCommit(commitCommand) {
     .then(() => console.log('git commands executed'))
     .then(process.exit)
     .catch(console.error);
-}
-
-function copyToClipboard(data) {
-  const proc = spawn('pbcopy');
-  proc.stdin.write(data);
-  proc.stdin.end();
-
-  console.log('Copied to clipboard!');
 }
 
 module.exports = main;
