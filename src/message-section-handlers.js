@@ -20,7 +20,7 @@ const readConfig = (overrideDir, defConfig, flags) => {
         )} from ${process.cwd()}`
       );
   }
-  return [];
+  return [defConfig];
 };
 
 const buildMessageSection = async ({ format, prompts } = {}) => {
