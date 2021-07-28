@@ -9,6 +9,7 @@ const parseFlags = ({
   m, // strip command to message only
   a, // auto determine scope
   s, // select files to stage
+  p, // pr
   // flags
   execute = e,
   messageOnly = m,
@@ -16,6 +17,8 @@ const parseFlags = ({
   autoscope = a,
   customParams,
   selectStaging = s,
+  pr = p,
+  ...rest
 }) => ({
   execute,
   messageOnly,
@@ -23,6 +26,8 @@ const parseFlags = ({
   autoscope,
   selectStaging,
   customParams,
+  pr,
+  ...rest,
 });
 
 function parseArgs() {
