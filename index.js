@@ -8,7 +8,7 @@ const parseFlags = ({
   e, // execute commit, pull --rebase, push
   m, // strip command to message only
   a, // auto determine scope
-  s, // select files to stage
+  f, // select files to stage
   p, // pr
   // flags
   execute = e,
