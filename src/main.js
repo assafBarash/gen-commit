@@ -3,14 +3,29 @@ const { buildMessageSections } = require('./message-section-handlers');
 const { copyToClipboard, executeCommand } = require('./utils');
 
 async function main(flags) {
-  const { execute, messageOnly, customParams } = flags;
+  const { execute, messageOnly, customParams, selectFiles } = flags;
 
-  const commitCommand = `git commit ${customParams} -m ${await buildMessageSections(
-    flags
-  )}`
-    .split(' ')
-    .filter(Boolean)
-    .join(' ');
+  selectFiles &&
+    (await prompts([
+      {
+        type: 'autocompleteMultiselect',
+        name: 'files',
+        message: 'Enter files to add',
+        hint: '- Space to select. Return to submit',
+        choices: (
+          await executeCommand('git diff --name-only')
+        )
+          .split('\n')
+          .filter(Boolean)
+          .map((d) => ({ title: d, value: d })),
+      },
+    ]).then(({ files }) => executeCommand(`git add ${files.join(' ')}`)));
+
+  const commitCommand =
+    `git commit ${customParams} -m ${await buildMessageSections(flags)}`
+      .split(' ')
+      .filter(Boolean)
+      .join(' ');
 
   if (execute) return executeCommit(commitCommand, flags);
   else
@@ -26,23 +41,10 @@ async function main(flags) {
     );
 }
 
-async function executeCommit(commitCommand, { selectStaging }) {
+async function executeCommit(commitCommand, { selectFiles }) {
   console.log(commitCommand);
 
-  await (!selectStaging
-    ? executeCommand('git add .')
-    : prompts([
-        {
-          type: 'autocompleteMultiselect',
-          name: 'files',
-          message: 'Enter files to add',
-          hint: '- Space to select. Return to submit',
-          choices: (await executeCommand('git diff --name-only'))
-            .split('\n')
-            .filter(Boolean)
-            .map((d) => ({ title: d, value: d })),
-        },
-      ]).then(({ files }) => executeCommand(`git add ${files.join(' ')}`)));
+  !selectFiles && (await executeCommand('git add .'));
 
   return executeCommand(commitCommand)
     .then(() => console.log('commit SUCCESS'))

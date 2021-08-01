@@ -16,7 +16,7 @@ const parseFlags = ({
   overrideConfig,
   autoscope = a,
   customParams,
-  selectStaging = s,
+  selectFiles = f,
   pr = p,
   ...rest
 }) => ({
@@ -24,7 +24,7 @@ const parseFlags = ({
   messageOnly,
   overrideConfig,
   autoscope,
-  selectStaging,
+  selectFiles,
   customParams,
   pr,
   ...rest,
