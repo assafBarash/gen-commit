@@ -1,18 +1,26 @@
 import { ConfigFunction } from './types';
 
-const createChoice = ({
-  value,
-  title = value,
-  description,
-}: {
-  value: string;
-  title?: string;
-  description: string;
-}) => ({
+const choiceFromEnum = ([value, description, title = value]: [
+  string,
+  string,
+  string?
+]) => ({
   title,
   value,
   description,
 });
+
+export enum CommitType {
+  feat = 'a new Feature',
+  fix = 'a bug fix',
+  refactor = 'a code change that neither fixes a bug nor adds a feature',
+  chore = "other changes which don't fall under other type and cannot be named refactoring",
+  test = 'adding missing tests or correcting existing tests',
+  build = 'changes that affect the build system or external dependencies',
+  perf = 'a code change that improves performance',
+  ci = 'changes to our CI configuration files and scripts',
+  style = 'changes that do not affect the meaning of the code',
+}
 
 export const defConfig: ConfigFunction = (_, { autoscope }) => ({
   format: ({ type, scope, description }) =>
@@ -24,44 +32,7 @@ export const defConfig: ConfigFunction = (_, { autoscope }) => ({
       type: 'autocomplete',
       name: 'type',
       message: 'Select commit type',
-      choices: [
-        { value: 'feat', description: 'A new feature' },
-        { value: 'fix', description: 'A bug fix' },
-
-        {
-          value: 'refactor',
-          description:
-            'A code change that neither fixes a bug nor adds a feature',
-        },
-        {
-          value: 'chore',
-          description:
-            "Other changes which don't fall under other type and cannot be named refactoring",
-        },
-        {
-          value: 'test',
-          description: 'Adding missing tests or correcting existing tests',
-        },
-        { value: 'revert', description: 'A Commit Revert' },
-        {
-          value: 'build',
-          description:
-            'Changes that affect the build system or external dependencies',
-        },
-        {
-          value: 'ci',
-          description: 'Changes to our CI configuration files and scripts',
-        },
-        { value: 'docs', description: 'Documentation only changes' },
-        {
-          value: 'perf',
-          description: 'A code change that improves performance',
-        },
-        {
-          value: 'style',
-          description: 'Changes that do not affect the meaning of the code',
-        },
-      ].map(createChoice),
+      choices: Object.entries(CommitType).map(choiceFromEnum),
     },
     {
       type: !autoscope && 'text',

@@ -5,7 +5,7 @@ import { copyToClipboard } from './utils';
 import { execSync } from 'child_process';
 
 export async function main(flags: Flags) {
-  const { execute, messageOnly, customParams, selectFiles } = flags;
+  const { execute, messageOnly, customParams = '', selectFiles } = flags;
 
   selectFiles &&
     (await prompts([

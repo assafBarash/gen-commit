@@ -11,10 +11,10 @@
     "dgc": "./index.js"
   },
   "scripts": {
-    "start": "node index.js --debug",
+    "start": "node dist/index.js --debug",
     "deploy": "node index.js -ea",
     "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npx jest",
     "postdeploy": "npm version patch",
     "postversion": "npm publish"
   },
