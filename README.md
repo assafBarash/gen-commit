@@ -37,25 +37,25 @@ the config file should export an array of objects as following:
 
 - the config file can export async function as well, where the first argument is the default steps and the second is the given flags
 
-```
+```json
 {
-   prompts: [
-     {
-      type: "text",
-      name: "keyA"
-     },
-     {
-      type: "text",
-      name: "keyB"
+  "prompts": [
+    {
+      "type": "text",
+      "name": "keyA"
+    },
+    {
+      "type": "text",
+      "name": "keyB"
       // see prompts docs for further config
-     },
-   ],
-   format: "{{keyA}} {{keyB}}"
+    }
+  ],
+  "format": "{{keyA}} {{keyB}}"
 }
 ```
 
-_prompts_ - prompts flow to build a single git `-m` statement. see [prompts docs](https://github.com/terkelg/prompts#readme) for possible config & usage.
+`prompts` - prompts flow to build a single git `-m` statement. see [prompts docs](https://github.com/terkelg/prompts#readme) for possible config & usage.
 
-_format<string | function>_ - the fashion in which the input acquired by the prompts flow will be arranged. <br>
+`format<string | function>` - the fashion in which the input acquired by the prompts flow will be arranged. <br>
 **when value is string** the name of each prompt can be used as value by wrapping with double brackets. example: {{prompt_name}} -> user input for that prompt step. <br>
 **when value is function** the first argument will be an object with keys & values populated from prompts, the returned value should be a string of the formatted message section
