@@ -3,7 +3,7 @@ import prompts from 'prompts';
 import { main } from './main';
 import { Flags } from './types';
 
-const setupTest = async ({
+const runDGC = async ({
   flags = {},
   input,
 }: {
@@ -27,7 +27,7 @@ describe('commit generator', () => {
   it('should generate commit command when running without flags', async () => {
     const input = ['feat', 'scope-value', 'message-value'];
 
-    const result = await setupTest({
+    const result = await runDGC({
       input,
     });
 
@@ -36,10 +36,10 @@ describe('commit generator', () => {
     expect(result).toBe(`git commit -m "${commitType}(${scope}): ${message}"`);
   });
 
-  it('should generate commit message when running with --messageOnly flag ()', async () => {
+  it('should generate commit message when running with --messageOnly flag', async () => {
     const input = ['feat', 'scope-value', 'message-value'];
 
-    const result = await setupTest({
+    const result = await runDGC({
       flags: { messageOnly: true },
       input,
     });
@@ -47,5 +47,20 @@ describe('commit generator', () => {
     const [commitType, scope, message] = input;
 
     expect(result).toBe(`${commitType}(${scope}): ${message}`);
+  });
+
+  it('should generate commit message with current scope when running with --autoscope flag', async () => {
+    const input = ['feat', 'message-value'];
+
+    const result = await runDGC({
+      flags: { autoscope: true },
+      input,
+    });
+
+    const [commitType, message] = input;
+
+    expect(result).toBe(
+      `git commit -m "${commitType}(git-commit): ${message}"`
+    );
   });
 });
