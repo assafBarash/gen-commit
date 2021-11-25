@@ -19,4 +19,4 @@ export type ConfigObject = {
 export type ConfigFunction = (
   defaultConfig: ConfigObject,
   flags: Flags
-) => ConfigObject;
+) => ConfigObject | Promise<ConfigObject>;

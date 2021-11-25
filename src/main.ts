@@ -40,6 +40,7 @@ export async function main(flags: Flags) {
             .join('\n')}`
             .split('"')
             .join('')
+            .trim()
         : commitCommand
     );
 }

@@ -1,30 +1,19 @@
 import { spawn } from 'child_process';
 import prompts from 'prompts';
-import { CommitType } from './def-config';
 import { main } from './main';
 import { Flags } from './types';
 
-type TestCase = [
-  string,
-  {
-    flags: Flags;
-    input: [string, string, string] | [CommitType, string];
-  }
-];
-
-it.each([
-  [
-    'it should pass',
-    {
-      flags: {},
-      input: ['feat', 'scope-value', 'message-value'],
-    },
-  ],
-] as TestCase[])('commit generator', async (msg, { input, flags }) => {
+const setupTest = async ({
+  flags = {},
+  input,
+}: {
+  flags?: Flags;
+  input: string[];
+}) => {
   prompts.inject(input);
   await main(flags);
 
-  const result = await new Promise((r) => {
+  return new Promise((r) => {
     const child = spawn('pbpaste');
 
     const data: any = [];
@@ -32,8 +21,31 @@ it.each([
       .on('data', (chunk) => data.push(chunk))
       .on('end', () => r(data.toString()));
   });
+};
 
-  const [commitType, scope, message] = input;
+describe('commit generator', () => {
+  it('should generate commit command when running without flags', async () => {
+    const input = ['feat', 'scope-value', 'message-value'];
 
-  expect(result).toBe(`git commit -m "${commitType}(${scope}): ${message}"`);
+    const result = await setupTest({
+      input,
+    });
+
+    const [commitType, scope, message] = input;
+
+    expect(result).toBe(`git commit -m "${commitType}(${scope}): ${message}"`);
+  });
+
+  it('should generate commit message when running with --messageOnly flag ()', async () => {
+    const input = ['feat', 'scope-value', 'message-value'];
+
+    const result = await setupTest({
+      flags: { messageOnly: true },
+      input,
+    });
+
+    const [commitType, scope, message] = input;
+
+    expect(result).toBe(`${commitType}(${scope}): ${message}`);
+  });
 });

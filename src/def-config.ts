@@ -1,4 +1,4 @@
-import { ConfigFunction } from './types';
+import { ConfigFunction, ConfigObject } from './types';
 
 const choiceFromEnum = ([value, description, title = value]: [
   string,
@@ -22,30 +22,34 @@ export enum CommitType {
   style = 'changes that do not affect the meaning of the code',
 }
 
-export const defConfig: ConfigFunction = (_, { autoscope }) => ({
-  format: ({ type, scope, description }) =>
-    `${type}${
-      autoscope ? `(${process.cwd().split('/').pop()})` : scope
-    }: ${description}`,
-  prompts: [
-    {
-      type: 'autocomplete',
-      name: 'type',
-      message: 'Select commit type',
-      choices: Object.entries(CommitType).map(choiceFromEnum),
-    },
-    {
-      type: !autoscope && 'text',
-      name: 'scope',
-      message: 'Enter scope',
-      initial: process.cwd().split('/').pop(),
-      format: (scope) => (scope ? `(${scope})` : ''),
-    },
-    {
-      type: 'text',
-      name: 'description',
-      message: 'Enter commit message',
-      validate: Boolean,
-    },
-  ],
-});
+export const defConfig: ConfigFunction = (_, { autoscope }) => {
+  console.log('autoscope', autoscope);
+
+  return {
+    format: ({ type, scope, description }) =>
+      `${type}${
+        autoscope ? `(${process.cwd().split('/').pop()})` : scope
+      }: ${description}`,
+    prompts: [
+      {
+        type: 'autocomplete',
+        name: 'type',
+        message: 'Select commit type',
+        choices: Object.entries(CommitType).map(choiceFromEnum),
+      },
+      {
+        type: !autoscope && 'text',
+        name: 'scope',
+        message: 'Enter scope',
+        initial: process.cwd().split('/').pop(),
+        format: (scope) => (scope ? `(${scope})` : ''),
+      },
+      {
+        type: 'text',
+        name: 'description',
+        message: 'Enter commit message',
+        validate: Boolean,
+      },
+    ],
+  };
+};

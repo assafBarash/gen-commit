@@ -7,14 +7,17 @@ import { Config, ConfigObject, Flags } from './types';
 const CONFIG_FILE = 'commit-generator.config';
 
 const getConfigDir = () => lookup(`${CONFIG_FILE}.js`);
-const readConfig = (defConfig: ConfigObject, flags: Flags) => {
+const readConfig = (
+  defConfig: ConfigObject,
+  flags: Flags
+): Promise<ConfigObject | ConfigObject[]> => {
   const { overrideConfig } = flags;
   try {
     const config: Config = require(`${overrideConfig || getConfigDir()}`);
 
     if (Array.isArray(config)) return Promise.resolve([defConfig, ...config]);
     if (typeof config === 'object') return Promise.resolve([defConfig, config]);
-    if (config) return config(defConfig, flags);
+    if (config) return Promise.resolve(config(defConfig, flags));
   } catch (e) {
     overrideConfig &&
       console.error(
@@ -23,7 +26,7 @@ const readConfig = (defConfig: ConfigObject, flags: Flags) => {
         )} from ${process.cwd()}`
       );
   }
-  return [defConfig];
+  return Promise.resolve([defConfig]);
 };
 
 const buildMessageSection = async ({
@@ -44,7 +47,7 @@ const buildMessageSection = async ({
 };
 
 const getMessageSections = async (flags: Flags) => {
-  const parsedDefConfig = defConfig(null as any, flags);
+  const parsedDefConfig = await defConfig(null as any, flags);
   const res = await readConfig(parsedDefConfig, flags);
 
   if (Array.isArray(res)) return res;
