@@ -8,11 +8,14 @@
     "url": "https://github.com/assafBarash/gen-commit"
   },
   "bin": {
-    "dgc": "./index.js"
+    "dgc": "dist/index.js"
   },
   "scripts": {
     "start": "node dist/index.js --debug",
-    "deploy": "node index.js -ea",
+    "deploy": "node dist/index.js -ea",
+    "predeploy": "npm run test",
+    "pretest": "npm run build",
+    "prebuild": "rm -rf dist",
     "build": "tsc",
     "test": "npx jest",
     "postdeploy": "npm version patch",
