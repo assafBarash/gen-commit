@@ -2,24 +2,27 @@ import { spawn } from 'child_process';
 import prompts from 'prompts';
 import { main } from './main';
 import { Flags } from './types';
+import { lookup } from './utils';
+import fs from 'fs';
 
 const runDGC = async ({
   flags = {},
   input,
 }: {
   flags?: Flags;
-  input: string[];
+  input: Array<string | string[]>;
 }) => {
   prompts.inject(input);
   await main(flags);
 
-  return new Promise((r) => {
+  return new Promise((resolve, reject) => {
     const child = spawn('pbpaste');
 
     const data: any = [];
     child.stdout
       .on('data', (chunk) => data.push(chunk))
-      .on('end', () => r(data.toString()));
+      .on('error', reject)
+      .on('end', () => resolve(data.toString()));
   });
 };
 
@@ -61,6 +64,52 @@ describe('commit generator', () => {
 
     expect(result).toBe(
       `git commit -m "${commitType}(git-commit): ${message}"`
+    );
+  });
+
+  it('should generate commit message with custom config', async () => {
+    const input = [
+      'feat',
+      'scope-value',
+      'message-value',
+      '123',
+      ['a', 'b', 'c'],
+    ];
+
+    const testConfigTemplatePath = lookup('test.commit-generator.config.js');
+    const testConfigPath = testConfigTemplatePath.replace('test.', '');
+    fs.renameSync(testConfigTemplatePath, testConfigPath);
+
+    const result = await runDGC({
+      input,
+    });
+
+    fs.renameSync(testConfigPath, testConfigTemplatePath);
+    const [commitType, scope, message] = input;
+
+    expect(result).toBe(
+      `git commit -m "${commitType}(${scope}): ${message}" -m "#EE-123 #cr@a,b,c"`
+    );
+  });
+
+  it('should generate commit message with custom config', async () => {
+    const input = [
+      'feat',
+      'scope-value',
+      'message-value',
+      '123',
+      ['a', 'b', 'c'],
+    ];
+
+    const result = await runDGC({
+      input,
+      flags: { overrideConfig: lookup('test.commit-generator.config.js') },
+    });
+
+    const [commitType, scope, message] = input;
+
+    expect(result).toBe(
+      `git commit -m "${commitType}(${scope}): ${message}" -m "#EE-123 #cr@a,b,c"`
     );
   });
 });

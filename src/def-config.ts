@@ -23,8 +23,6 @@ export enum CommitType {
 }
 
 export const defConfig: ConfigFunction = (_, { autoscope }) => {
-  console.log('autoscope', autoscope);
-
   return {
     format: ({ type, scope, description }) =>
       `${type}${

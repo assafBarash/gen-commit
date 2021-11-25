@@ -14,11 +14,13 @@ const readConfig = (
   const { overrideConfig } = flags;
   try {
     const config: Config = require(`${overrideConfig || getConfigDir()}`);
+    console.log('@@', config);
 
     if (Array.isArray(config)) return Promise.resolve([defConfig, ...config]);
     if (typeof config === 'object') return Promise.resolve([defConfig, config]);
     if (config) return Promise.resolve(config(defConfig, flags));
   } catch (e) {
+    console.log('@@', e);
     overrideConfig &&
       console.error(
         `couldn't find overrideConfig at ${path.join(
