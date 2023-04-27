@@ -35,7 +35,7 @@ const buildMessageSection = async ({
 }: ConfigObject): Promise<string> => {
   if (!prompts) return Promise.resolve('');
   const messageParams = await _prompts(prompts, {
-    onCancel: () => process.exit(),
+    // onCancel: () => process.exit(),
   });
 
   return typeof format === 'function'

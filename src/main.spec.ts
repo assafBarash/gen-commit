@@ -1,8 +1,8 @@
-import { spawn } from 'child_process';
+import { execSync, spawn } from 'child_process';
 import prompts from 'prompts';
 import { main } from './main';
 import { Flags } from './types';
-import { lookup } from './utils';
+import { byOs, lookup } from './utils';
 import fs from 'fs';
 
 const runDGC = async ({
@@ -16,13 +16,24 @@ const runDGC = async ({
   await main(flags);
 
   return new Promise((resolve, reject) => {
-    const child = spawn('pbpaste');
+    byOs({
+      win: () => {
+        resolve(execSync('powershell get-clipboard').toString());
+      },
+      osx: () => {
+        const child = spawn('pbpaste');
 
-    const data: any = [];
-    child.stdout
-      .on('data', (chunk) => data.push(chunk))
-      .on('error', reject)
-      .on('end', () => resolve(data.toString()));
+        const data: any = [];
+        child.stdout
+          .on('data', (chunk) => {
+            data.push(chunk);
+          })
+          .on('error', reject)
+          .on('end', () => {
+            resolve(data.toString());
+          });
+      },
+    });
   });
 };
 
@@ -62,8 +73,8 @@ describe('commit generator', () => {
 
     const [commitType, message] = input;
 
-    expect(result).toBe(
-      `git commit -m "${commitType}(git-commit): ${message}"`
+    expect(result).toEqual(
+      `git commit -m "${commitType}(gen-commit): ${message}"`
     );
   });
 

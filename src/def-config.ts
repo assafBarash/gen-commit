@@ -1,4 +1,5 @@
-import { ConfigFunction, ConfigObject } from './types';
+import { ConfigFunction } from './types';
+import path from 'path';
 
 const choiceFromEnum = ([value, description, title = value]: [
   string,
@@ -22,12 +23,12 @@ export enum CommitType {
   style = 'changes that do not affect the meaning of the code',
 }
 
+const defaultScop = path.basename(process.cwd());
+
 export const defConfig: ConfigFunction = (_, { autoscope }) => {
   return {
     format: ({ type, scope, description }) =>
-      `${type}${
-        autoscope ? `(${process.cwd().split('/').pop()})` : scope
-      }: ${description}`,
+      `${type}${autoscope ? `(${defaultScop})` : scope}: ${description}`,
     prompts: [
       {
         type: 'autocomplete',
@@ -39,7 +40,7 @@ export const defConfig: ConfigFunction = (_, { autoscope }) => {
         type: !autoscope && 'text',
         name: 'scope',
         message: 'Enter scope',
-        initial: process.cwd().split('/').pop(),
+        initial: defaultScop,
         format: (scope) => (scope ? `(${scope})` : ''),
       },
       {
