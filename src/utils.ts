@@ -33,6 +33,7 @@ export function copyToClipboard(data: string, msg = 'Copied to clipboard!') {
       proc.stdin.end();
     },
   });
+
   msg && console.log(msg);
 }
 
